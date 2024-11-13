@@ -54,7 +54,7 @@ inputs:
     description: "To be deleted environment ID"
     required: false
 
-  GET_ENV_ID:
+  GET_ENV_ID_BOOL:
     description: "Get the Id of env with name"
     required: false
     default: "false"
@@ -62,6 +62,7 @@ inputs:
   GET_END_ID_NAME:
     description: "Env Name for getting ID"
     required: false
+    
 
 
 
