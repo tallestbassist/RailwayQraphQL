@@ -2,11 +2,11 @@ const core = require('@actions/core');
 const { request, gql, GraphQLClient } = require('graphql-request')
 
 // Railway Required Inputs
-const RAILWAY_API_TOKEN = '31c82fba-e045-4699-89b1-6acaec354f2b'
-const PROJECT_ID = '93668177-79eb-4927-a7c7-f3d7147c42f5'
+const RAILWAY_API_TOKEN = core.getInput('RAILWAY_API_TOKEN');
+const PROJECT_ID = core.getInput('PROJECT_ID');
 const SRC_ENVIRONMENT_NAME = core.getInput('SRC_ENVIRONMENT_NAME');
 const SRC_ENVIRONMENT_ID = core.getInput('SRC_ENVIRONMENT_ID');
-const DEST_ENV_NAME = 'graphqltest'//core.getInput('DEST_ENV_NAME');
+const DEST_ENV_NAME = core.getInput('DEST_ENV_NAME');
 const ENV_VARS = core.getInput('ENV_VARS');
 const API_SERVICE_NAME = core.getInput('API_SERVICE_NAME');
 const IGNORE_SERVICE_REDEPLOY = core.getInput('IGNORE_SERVICE_REDEPLOY');
@@ -15,7 +15,7 @@ const ENDPOINT = 'https://backboard.railway.app/graphql/v2';
 const DELETE_ENV_BOOL = core.getInput('DELETE_ENV_BOOL');
 const DELETE_ENV_ID = core.getInput('DELETE_ENV_ID');
 const GET_ENV_ID_BOOL = core.getInput('GET_ENV_ID_BOOL');
-const GET_END_ID_NAME = 'graphqltest' //core.getInput('GET_END_ID_NAME');
+const GET_END_ID_NAME = core.getInput('GET_END_ID_NAME');
 
 let ENVIRONMENT_ID_OUT = process.env.ENVIRONMENT_ID_OUT;
 
@@ -61,7 +61,7 @@ async function run() {
         const filteredEdges = response.environments.edges.filter((edge) => edge.node.name === DEST_ENV_NAME);
 
         // If there is a match this means the environment already exists
-        if (filteredEdges.length == 1) {
+        if (filteredEdges.length === 1) {
             throw new Error('Environment already exists. Please delete the environment via API or Railway Dashboard and try again.')
         }
 
