@@ -334,3 +334,25 @@ async function updateAllDeploymentTriggers(deploymentTriggerIds) {
         console.error("An error occurred during the update:", error);
     }
 }
+
+async function serviceInstanceRedeploy(environmentId, serviceId) {
+    console.log("Redeploying Service...")
+    console.log("Environment ID:", environmentId)
+    console.log("Service ID:", serviceId)
+    try {
+        let query = gql`
+        mutation serviceInstanceRedeploy($environmentId: String!, $serviceId: String!) {
+            serviceInstanceRedeploy(environmentId: $environmentId, serviceId: $serviceId)
+        }
+        `
+
+        let variables = {
+            "environmentId": environmentId,
+            "serviceId": serviceId
+        }
+
+        return await railwayGraphQLRequest(query, variables)
+    } catch (error) {
+        core.setFailed(`Action failed with error: ${error}`);
+    }
+}
