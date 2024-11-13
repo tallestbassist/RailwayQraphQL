@@ -11,6 +11,7 @@ const ENV_VARS = core.getInput('ENV_VARS');
 const API_SERVICE_NAME = core.getInput('API_SERVICE_NAME');
 const IGNORE_SERVICE_REDEPLOY = core.getInput('IGNORE_SERVICE_REDEPLOY');
 const ENDPOINT = 'https://backboard.railway.app/graphql/v2';
+const BRANCH_NAME = core.getInput('branch_name') || "feat-railway-7";
 
 const DELETE_ENV_BOOL = core.getInput('DELETE_ENV_BOOL');
 const DELETE_ENV_ID = core.getInput('DELETE_ENV_ID');
@@ -349,6 +350,30 @@ async function serviceInstanceRedeploy(environmentId, serviceId) {
         let variables = {
             "environmentId": environmentId,
             "serviceId": serviceId
+        }
+
+        return await railwayGraphQLRequest(query, variables)
+    } catch (error) {
+        core.setFailed(`Action failed with error: ${error}`);
+    }
+}
+
+async function deploymentTriggerUpdate(deploymentTriggerId) {
+    console.log("Updating Deploying Trigger to new Branch Name")
+    try {
+        let query = gql`
+        mutation deploymentTriggerUpdate($id: String!, $input: DeploymentTriggerUpdateInput!) {
+            deploymentTriggerUpdate(id: $id, input: $input) {
+                id
+            }
+        }
+        `
+
+        let variables = {
+            id: deploymentTriggerId,
+            input: {
+                "branch": BRANCH_NAME,
+            }
         }
 
         return await railwayGraphQLRequest(query, variables)
